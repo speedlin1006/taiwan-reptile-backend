@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 import merchantRoutes from "./routes/merchantRoutes.js"
 import productRoutes from "./routes/productRoutes.js"
 import uploadRoutes from "./routes/uploadRoutes.js"
+import reportRoutes from "./routes/reportRoutes.js"
 
 dotenv.config()
 
@@ -23,6 +24,8 @@ app.use("/api/merchants", merchantRoutes)
 app.use("/api/products", productRoutes)
 
 app.use("/api/upload", uploadRoutes)
+
+app.use("/api/report",reportRoutes)
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
