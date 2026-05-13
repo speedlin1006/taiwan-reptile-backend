@@ -1,3 +1,8 @@
 node_modules
 .env
 uploads
+
+
+git add .
+git commit -m "自訂"
+git push
