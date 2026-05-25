@@ -4,5 +4,5 @@ uploads
 
 
 # git add .
-# git commit -m "商家部分改版"
+# git commit -m "更改刪除商家權限"
 # git push

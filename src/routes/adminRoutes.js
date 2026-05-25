@@ -47,6 +47,21 @@ router.delete(
         req.params.id
       )
 
+      if(
+
+        merchant.role === "admin"
+
+        ){
+
+        return res.status(403).json({
+
+            message:
+            "管理員帳號不可刪除"
+
+        })
+
+        }
+
       if(!merchant){
 
         return res.status(404).json({
