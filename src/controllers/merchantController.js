@@ -88,15 +88,21 @@ export const registerMerchant = async (req, res) => {
         banner
 
     })
-
+    console.log(merchant)
     res.status(201).json({
 
       message: "Merchant registered successfully",
 
       merchant: {
+
         id: merchant._id,
+
         shopName: merchant.shopName,
-        email: merchant.email
+
+        email: merchant.email,
+
+        role: merchant.role
+
       }
 
     })
@@ -163,8 +169,12 @@ export const loginMerchant = async (req, res) => {
       merchant: {
 
         id: merchant._id,
+
         shopName: merchant.shopName,
-        email: merchant.email
+
+        email: merchant.email,
+
+        role: merchant.role
 
       }
 
