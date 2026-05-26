@@ -6,7 +6,8 @@ import {
   loginMerchant,
   getProfile,
   getMerchantById,
-  updateProfile
+  updateProfile,
+  updateMerchantStatus
 }
 
 from "../controllers/merchantController.js"
@@ -50,6 +51,11 @@ router.put(
   "/profile",
   authMiddleware,
   updateProfile
+)
+
+router.patch(
+  "/merchant/:id/status",
+  updateMerchantStatus
 )
 
 // 單店家

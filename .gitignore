@@ -4,5 +4,5 @@ uploads
 
 
 # git add .
-# git commit -m "更改刪除商家權限"
+# git commit -m "修改管理頁面 新增審核機制"
 # git push

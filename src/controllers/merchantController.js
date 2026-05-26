@@ -146,6 +146,41 @@ export const loginMerchant = async (req, res) => {
 
     }
 
+    /* status */
+
+    if(merchant.status === "pending"){
+
+      return res.status(403).json({
+
+        message:
+          "帳號審核中"
+
+      })
+
+    }
+
+    if(merchant.status === "suspended"){
+
+      return res.status(403).json({
+
+        message:
+          "帳號已停權"
+
+      })
+
+    }
+
+    if(merchant.status === "banned"){
+
+      return res.status(403).json({
+
+        message:
+          "帳號已封鎖"
+
+      })
+
+    }
+
     const token = jwt.sign(
 
       {
@@ -335,3 +370,46 @@ export const updateProfile = async (req, res) => {
 
 }
 
+export const updateMerchantStatus = async (req, res) => {
+
+  try {
+
+    const merchant = await Merchant.findById(
+      req.params.id
+    )
+
+    if(!merchant){
+
+      return res.status(404).json({
+
+        message: "找不到商家"
+
+      })
+
+    }
+
+    merchant.status = req.body.status
+
+    await merchant.save()
+
+    res.json({
+
+      message: "狀態更新成功",
+
+      merchant
+
+    })
+
+  } catch (err) {
+
+    console.log(err)
+
+    res.status(500).json({
+
+      message: err.message
+
+    })
+
+  }
+
+}
