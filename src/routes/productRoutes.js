@@ -8,7 +8,10 @@ import {
   updateProduct,
   getProductById,
   getProductsByMerchant,
-  toggleProductStatus
+  approveProduct,
+  getAllProducts,
+  hideProduct,
+  unhideProduct
 }
 
 from "../controllers/productController.js"
@@ -71,12 +74,29 @@ router.put(
   updateProduct
 )
 
-// 快速上下架
-router.put(
-  "/toggle/:id",
+router.patch(
+  "/approve/:id",
   authMiddleware,
-  toggleProductStatus
+  approveProduct
 )
 
+
+router.get(
+  "/admin/all",
+  authMiddleware,
+  getAllProducts
+)
+
+router.patch(
+  "/hide/:id",
+  authMiddleware,
+  hideProduct
+)
+
+router.patch(
+  "/unhide/:id",
+  authMiddleware,
+  unhideProduct
+)
 
 export default router

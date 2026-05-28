@@ -10,18 +10,17 @@ export const createProduct = async (req, res) => {
     console.log("merchantId:", req.merchantId)
 
     const {
-        name,
-        category,
-        tags,
-        description,
-        price,
-        stock,
-        status,
-        images,
-        video
-    } = req.body
-    const product = await Product.create({
+          name,
+          category,
+          tags,
+          description,
+          price,
+          stock,
+          images,
+          video
 
+      } = req.body
+    const product = await Product.create({
       merchant: req.merchantId,
 
       name,
@@ -30,7 +29,10 @@ export const createProduct = async (req, res) => {
       description,
       price,
       stock,
-      status,
+
+      // 新商品一律待審核
+      status: "pending",
+
       images,
       video
 
@@ -63,7 +65,7 @@ export const getProducts = async (req, res) => {
 
     const products = await Product.find({
 
-        status: "on"
+        status: "active"
 
         })
 
@@ -201,7 +203,6 @@ export const updateProduct = async (req, res) => {
         description,
         price,
         stock,
-        status,
         images,
         video
     } = req.body
@@ -223,10 +224,7 @@ export const updateProduct = async (req, res) => {
     product.stock =
       stock ?? product.stock
 
-    product.status =
-      status ?? product.status
-
-    product.images =
+      product.images =
       images ?? product.images
 
     product.video =
@@ -259,7 +257,13 @@ export const getProductById = async (req, res) => {
 
   try {
 
-    const product = await Product.findById(req.params.id)
+    const product = await Product.findOne({
+
+      _id: req.params.id,
+
+      status: "active"
+
+    })
 
       .populate(
         "merchant",
@@ -297,7 +301,7 @@ export const getProductsByMerchant = async (req, res) => {
     const products = await Product.find({
 
       merchant: req.params.merchantId,
-      status: "on"
+      status: "active"
 
     })
 
@@ -319,8 +323,8 @@ export const getProductsByMerchant = async (req, res) => {
 
 }
 
-// 快速上下架
-export const toggleProductStatus = async (req, res) => {
+
+export const approveProduct = async (req, res) => {
 
   try {
 
@@ -336,32 +340,128 @@ export const toggleProductStatus = async (req, res) => {
 
     }
 
-    // 權限檢查
-    if (
-      product.merchant.toString()
-      !==
-      req.merchantId
-    ) {
+    product.status = "active"
 
-      return res.status(403).json({
-        message: "No permission"
-      })
+    product.reviewedAt = new Date()
 
-    }
-
-    // 切換狀態
-    product.status =
-      product.status === "on"
-        ? "off"
-        : "on"
+    product.reviewedBy = req.merchantId
 
     await product.save()
 
     res.json({
 
-      message: "Status updated",
+      message: "Product approved",
 
-      status: product.status
+      product
+
+    })
+
+  } catch (err) {
+
+    console.log(err)
+
+    res.status(500).json({
+      message: err.message
+    })
+
+  }
+
+}
+
+export const getAllProducts = async (req, res) => {
+
+  try {
+
+    const products = await Product.find()
+
+    .populate(
+      "merchant",
+      "shopName"
+    )
+
+    .sort({
+      createdAt: -1
+    })
+
+    res.json(products)
+
+  } catch (err) {
+
+    console.log(err)
+
+    res.status(500).json({
+      message: err.message
+    })
+
+  }
+
+}
+
+export const hideProduct = async (req, res) => {
+
+  try {
+
+    const product = await Product.findById(
+      req.params.id
+    )
+
+    if (!product) {
+
+      return res.status(404).json({
+        message: "Product not found"
+      })
+
+    }
+
+    product.status = "hidden"
+
+    await product.save()
+
+    res.json({
+
+      message: "Product hidden",
+
+      product
+
+    })
+
+  } catch (err) {
+
+    console.log(err)
+
+    res.status(500).json({
+      message: err.message
+    })
+
+  }
+
+}
+
+export const unhideProduct = async (req, res) => {
+
+  try {
+
+    const product = await Product.findById(
+      req.params.id
+    )
+
+    if (!product) {
+
+      return res.status(404).json({
+        message: "Product not found"
+      })
+
+    }
+
+    product.status = "active"
+
+    await product.save()
+
+    res.json({
+
+      message: "Product restored",
+
+      product
 
     })
 

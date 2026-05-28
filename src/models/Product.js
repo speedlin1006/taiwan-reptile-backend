@@ -101,18 +101,82 @@ const productSchema = new mongoose.Schema({
 
   },
 
+  // 商品審核狀態
   status: {
 
     type: String,
 
     enum: [
 
-      "on",
-      "off"
+      "pending",
+      "active",
+      "rejected",
+      "hidden"
 
     ],
 
-    default: "on"
+    default: "pending"
+
+  },
+
+  // 審核回覆訊息
+  reviewMessage: {
+
+    type: String,
+
+    default: ""
+
+  },
+
+  // 審核時間
+  reviewedAt: {
+
+    type: Date
+
+  },
+
+  // 哪位 admin 審核
+  reviewedBy: {
+
+    type: mongoose.Schema.Types.ObjectId,
+
+    ref: "Merchant"
+
+  },
+
+  // feed 置頂
+  isPinned: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  // feed 推薦
+  isRecommended: {
+
+    type: Boolean,
+
+    default: false
+
+  },
+
+  // 瀏覽數
+  views: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  // 喜歡數
+  likes: {
+
+    type: Number,
+
+    default: 0
 
   }
 
