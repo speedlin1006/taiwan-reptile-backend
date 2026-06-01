@@ -15,6 +15,9 @@ from "../controllers/merchantController.js"
 import authMiddleware
 from "../middleware/authMiddleware.js"
 
+import adminMiddleware
+from "../middleware/adminMiddleware.js"
+
 const router = express.Router()
 
 
@@ -55,6 +58,8 @@ router.put(
 
 router.patch(
   "/merchant/:id/status",
+  authMiddleware,
+  adminMiddleware,
   updateMerchantStatus
 )
 

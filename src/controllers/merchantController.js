@@ -85,13 +85,22 @@ export const registerMerchant = async (req, res) => {
 
         logo,
 
-        banner
+        banner,
+
+        role: "merchant",
+
+        status: "pending",
+
+        verified: false,
+
+        emailVerified: false
 
     })
     console.log(merchant)
     res.status(201).json({
 
-      message: "Merchant registered successfully",
+      message:
+    "商家申請成功，等待管理員審核",
 
       merchant: {
 
@@ -133,6 +142,21 @@ export const loginMerchant = async (req, res) => {
 
     }
 
+    if (
+      merchant.lockUntil &&
+      merchant.lockUntil > new Date()
+
+    ) {
+
+      return res.status(403).json({
+
+        message:
+          "登入失敗次數過多，請10分鐘後再試"
+
+      })
+
+    }
+
     const isMatch = await bcrypt.compare(
       password,
       merchant.password
@@ -140,8 +164,30 @@ export const loginMerchant = async (req, res) => {
 
     if (!isMatch) {
 
+      merchant.failedLoginCount += 1
+
+      if (
+
+        merchant.failedLoginCount >= 5
+
+      ) {
+
+        merchant.lockUntil = new Date(
+
+          Date.now() +
+          10 * 60 * 1000
+
+        )
+
+      }
+
+      await merchant.save()
+
       return res.status(400).json({
-        message: "Wrong password"
+
+        message:
+          "帳號或密碼錯誤"
+
       })
 
     }
@@ -154,6 +200,17 @@ export const loginMerchant = async (req, res) => {
 
         message:
           "帳號審核中"
+
+      })
+
+    }
+
+    if(merchant.status === "rejected"){
+
+      return res.status(403).json({
+
+        message:
+          "商家申請未通過"
 
       })
 
@@ -181,10 +238,20 @@ export const loginMerchant = async (req, res) => {
 
     }
 
+    merchant.failedLoginCount = 0
+
+    merchant.lockUntil = null
+
+    merchant.lastLoginAt =
+      new Date()
+
+    await merchant.save()
+
     const token = jwt.sign(
 
       {
-        merchantId: merchant._id
+        merchantId: merchant._id,
+        role: merchant.role
       },
 
       process.env.JWT_SECRET,
@@ -371,6 +438,7 @@ export const updateProfile = async (req, res) => {
 }
 
 export const updateMerchantStatus = async (req, res) => {
+  
 
   try {
 
@@ -388,7 +456,39 @@ export const updateMerchantStatus = async (req, res) => {
 
     }
 
+        const allowedStatus = [
+      "pending",
+      "active",
+      "suspended",
+      "banned"
+
+    ]
+
+    if (
+
+      !allowedStatus.includes(
+        req.body.status
+      )
+
+    ) {
+
+      return res.status(400).json({
+
+        message:
+          "Invalid status"
+
+      })
+
+    }
+
+
     merchant.status = req.body.status
+
+    if(typeof req.body.verified === "boolean"){
+
+      merchant.verified = req.body.verified
+
+    }
 
     await merchant.save()
 

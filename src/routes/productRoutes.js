@@ -19,6 +19,9 @@ from "../controllers/productController.js"
 import authMiddleware
 from "../middleware/authMiddleware.js"
 
+import adminMiddleware
+from "../middleware/adminMiddleware.js"
+
 const router = express.Router()
 
 
@@ -77,6 +80,7 @@ router.put(
 router.patch(
   "/approve/:id",
   authMiddleware,
+  adminMiddleware,
   approveProduct
 )
 
@@ -84,18 +88,21 @@ router.patch(
 router.get(
   "/admin/all",
   authMiddleware,
+  adminMiddleware,
   getAllProducts
 )
 
 router.patch(
   "/hide/:id",
   authMiddleware,
+  adminMiddleware,
   hideProduct
 )
 
 router.patch(
   "/unhide/:id",
   authMiddleware,
+  adminMiddleware,
   unhideProduct
 )
 

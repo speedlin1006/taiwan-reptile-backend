@@ -146,7 +146,8 @@ const merchantSchema = new mongoose.Schema({
       "pending",
       "active",
       "suspended",
-      "banned"
+      "banned",
+      "rejected"
 
     ],
 
@@ -166,6 +167,54 @@ const merchantSchema = new mongoose.Schema({
     ],
 
     default: "merchant"
+
+  },
+
+  failedLoginCount: {
+
+    type: Number,
+
+    default: 0
+
+  },
+
+  lockUntil: {
+
+    type: Date,
+
+    default: null
+
+  },
+
+  lastLoginAt: {
+
+    type: Date,
+
+    default: null
+
+  },
+
+  emailVerified: {
+
+  type: Boolean,
+
+  default: false
+
+  },
+
+  emailVerifyToken: {
+
+    type: String,
+
+    default: ""
+
+  },
+
+  appliedAt: {
+
+    type: Date,
+
+    default: Date.now
 
   }
 

@@ -26,6 +26,12 @@ const authMiddleware = (req, res, next) => {
     req.merchantId =
       decoded.merchantId
 
+    req.role =
+      decoded.role
+
+    req.role =
+      decoded.role
+
     next()
 
   } catch (err) {

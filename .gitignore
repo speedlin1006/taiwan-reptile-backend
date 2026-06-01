@@ -4,5 +4,5 @@ uploads
 
 
 # git add .
-# git commit -m "更改上下架全縣 有官方統一管理"
+# git commit -m "新增自行註冊 藍勾勾認證"
 # git push
