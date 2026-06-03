@@ -4,5 +4,5 @@ uploads
 
 
 # git add .
-# git commit -m "新增自行註冊 藍勾勾認證"
+# git commit -m "改設定 修改前端畫面"
 # git push

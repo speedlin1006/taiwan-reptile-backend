@@ -70,8 +70,8 @@ export const getProducts = async (req, res) => {
         })
 
         .populate(
-        "merchant",
-        "shopName"
+            "merchant",
+            "shopName verified logo"
         )
 
         .sort({
@@ -267,7 +267,7 @@ export const getProductById = async (req, res) => {
 
       .populate(
         "merchant",
-        "shopName logo instagram facebook shopee description"
+        "shopName logo instagram facebook shopee description verified"
       )
 
     if (!product) {
@@ -376,9 +376,8 @@ export const getAllProducts = async (req, res) => {
 
     .populate(
       "merchant",
-      "shopName"
+      "shopName verified logo"
     )
-
     .sort({
       createdAt: -1
     })
