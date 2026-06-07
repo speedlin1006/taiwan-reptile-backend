@@ -8,6 +8,7 @@ import productRoutes from "./routes/productRoutes.js"
 import uploadRoutes from "./routes/uploadRoutes.js"
 import reportRoutes from "./routes/reportRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
+import announcementRoutes from "./routes/announcementRoutes.js"
 
 dotenv.config()
 
@@ -29,6 +30,8 @@ app.use("/api/upload", uploadRoutes)
 app.use("/api/report",reportRoutes)
 
 app.use("/api/admin",adminRoutes)
+
+app.use("/api/announcements",announcementRoutes)
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {

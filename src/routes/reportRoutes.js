@@ -1,5 +1,6 @@
 import express from "express"
 import nodemailer from "nodemailer"
+import Report from "../models/Report.js"
 
 const router = express.Router()
 
@@ -7,7 +8,46 @@ router.post("/", async (req, res) => {
 
   try{
 
-    const { message } = req.body
+    const {
+
+      type,
+      message,
+      image
+
+    } = req.body
+    let typeText = ""
+
+    switch(type){
+
+      case "bug":
+        typeText = "Bug回報"
+        break
+
+      case "suggestion":
+        typeText = "功能建議"
+        break
+
+      case "product":
+        typeText = "檢舉商品"
+        break
+
+      case "merchant":
+        typeText = "檢舉商家"
+        break
+
+      default:
+        typeText = "其他問題"
+
+    }
+    await Report.create({
+
+      type,
+
+      message,
+
+      image
+
+    })
 
     // Gmail transporter
     const transporter =
@@ -39,8 +79,29 @@ router.post("/", async (req, res) => {
       subject:
         "台灣爬寵情報｜問題回報",
 
+
       text:
-        message
+      `
+      台灣爬寵情報｜問題回報
+
+      ＝＝＝＝＝＝＝＝＝＝
+
+      問題類型：
+      ${typeText}
+
+      ＝＝＝＝＝＝＝＝＝＝
+
+      回報內容：
+
+      ${message}
+
+      ＝＝＝＝＝＝＝＝＝＝
+
+      圖片：
+
+      ${image || "無"}
+
+      `
 
     })
 

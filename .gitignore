@@ -4,5 +4,5 @@ uploads
 
 
 # git add .
-# git commit -m "改設定 修改前端畫面"
+# git commit -m "新增公告 問題回報 資料庫紀錄"
 # git push
